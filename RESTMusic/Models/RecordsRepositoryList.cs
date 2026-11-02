@@ -1,4 +1,7 @@
-﻿namespace RESTMusic.Models
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Reflection;
+
+namespace RESTMusic.Models
 {
     public class RecordsRepositoryList 
     {
@@ -16,8 +19,40 @@
 
         }
 
+        public List<Record> GetAll(string Title = null, string SortBy = null)
+        {
+            List<Record> records = new(_recordsList);
+            if (Title != null)
+            {
+                records = records.FindAll(r => r.Title.StartsWith(Title));
+            }
+            if (SortBy != null)
+            {
+                switch (SortBy.ToLower())
+                {
+                    case "Title":
+                        records = records.OrderBy(r => r.Title).ToList();
+                        break;
+                    case "Artist":
+                        records = records.OrderBy(r => r.Artist).ToList();
+                        break;
+                    case "Duration":
+                        records = records.OrderBy(r => r.Duration).ToList();
+                        break;
+                    case "PublicationYear":
+                        records = records.OrderBy(r => r.PublicationYear).ToList();
+                        break;
+                }
+
+                
+            }
+            return _recordsList;
+        }
         private int nextId = 1;
        
+        
+
+
 
      
 
