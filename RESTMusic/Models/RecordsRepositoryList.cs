@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace RESTMusic.Models
 {
-    public class RecordsRepositoryList 
+    public class RecordsRepositoryList : IRecordsRepository
     {
         private List<Record> _recordsList = new List<Record>();
         public RecordsRepositoryList()
@@ -49,12 +49,44 @@ namespace RESTMusic.Models
             return _recordsList;
         }
         private int nextId = 1;
-       
-        
 
-
-
+        public Record AddRecord(Record record)
+        {
+            record.Id = nextId++;
+            _recordsList.Add(record);
+            return record;
+        }
      
+        public Record? GetRecordById(int id)
+        {
+            return _recordsList.FirstOrDefault(r => r.Id == id);
+        }
+
+        public Record DeleteById(int id)
+        {
+            Record? record = GetRecordById(id);
+            if (record != null)
+            {
+                _recordsList.Remove(record);
+            }
+            return record;
+        }
+
+        public Record UpdateById(int id, Record value)
+        {
+            Record? record = GetRecordById(id);
+            if (record != null)
+            {
+                record.Title = value.Title;
+                record.Artist = value.Artist;
+                record.Duration = value.Duration;
+                record.PublicationYear = value.PublicationYear;
+            }
+            return record;
+        }
+
+
+
 
 
     }
